@@ -11,4 +11,5 @@ COPY python_parser python_parser/
 COPY handler.py .
 COPY helpers helpers/
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["python", "/usr/src/app/code/handler.py"]
+
