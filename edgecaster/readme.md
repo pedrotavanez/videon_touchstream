@@ -40,3 +40,14 @@ adb push code
 # Run docker image
 Note: using --network as we are collecting metrics from prometheus exposed to localhost
 * docker run -it ... --network="host"
+
+Step-by-Step
+
+1) git clone <repo_url>;
+2) Add your touchstream_conf.json file based on the example;
+3) Push code folder to Edgecaster
+   1) adb push <code_folder> /data/local/touchstream/
+4) Build image
+   1) docker build -t touchstream/edgeagent .
+5) Create and run container in the background
+   1) docker run -it ... --network="host"

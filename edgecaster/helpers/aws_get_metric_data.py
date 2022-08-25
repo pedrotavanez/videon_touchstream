@@ -1,5 +1,5 @@
-from aws_client import new_aws_client
-from time_in_query import time_in_query
+from helpers.aws_client import new_aws_client
+from helpers.time_in_query import time_in_query
 from pprint import pprint
 import json
 import requests
@@ -132,8 +132,7 @@ def e2e_sender(data, system, headers, options):
     print(r.text)
 
 
-data = {}
-metrics = aws_metric_data(data)
+
 # headers = {
 #     "X-TS-ID": "fef6c8f8-c79e-473d-8840-85aa62bc",
 #     "Authorization": "Bearer 3c972d1f0b6548508edaccc82076b09c",
@@ -141,6 +140,50 @@ metrics = aws_metric_data(data)
 # }
 # options = {}
 # options["channel"] = ["064ed77c", "064ed77c.Live.HLS.AWS_IVS"]
+data = {
+  "system":"tsd",
+  "context":"live",
+  "edgecaster_ip": "127.0.0.1",
+  "channel": ["064ed77c", "064ed77c.Live.HLS.AWS_IVS"],
+  "aws_service": "cloudwatch",
+  "aws_access_id": "S749HIS5RWN0AQV",
+  "region": "us-east-1",
+  "arn": "arn:aws:iam::714125606834:role/touchstream-medialive-role-CrossAccountRole-DEB8UR3OTC5W",
+  "mapping": {
+        "outputs": {"touchstream IVS": 20},
+        "e2e": "84247d68"
+    },
+  "auth": {"X-TS-ID": "94575b6a-b496-4286-a5c8-91b5410d","Authorization": "Bearer 0e7ba701527749dfa48a76154c4c12bd","Content-Type": "application/json"},
+  "thresholds":[
+    {
+      "metric1": ["valueForWarn","valueForCrit"],
+      "metric2": ["valueForWarn","valueForCrit"],
+      "node_thermal_zone_temp{type=\"battery\",zone=\"1\"}": [50,60]
+    }
+  ],
+  "metrics": [
+        "node_thermal_zone_temp",
+        "node_memory_Active_bytes",
+        "node_memory_MemTotal_bytes",
+        "node_filesystem_avail_bytes",
+        "node_filesystem_size_bytes",
+        "node_cpu_seconds_total"
+  ],
+    "metrics_original": [
+        "node_thermal_zone_temp{type=\"battery\",zone=\"1\"}",
+        "node_thermal_zone_temp{type = 'pm8994_tz', zone = '23'}",
+        "node_memory_Active_bytes",
+        "node_memory_MemTotal_bytes",
+        "node_filesystem_avail_bytes{device='/dev/block/dm-1',fstype='ext4',mountpoint='/data'}",
+        "node_filesystem_size_bytes{device='/dev/block/dm-1',fstype='ext4',mountpoint='/data'}",
+        "node_cpu_seconds_total"
+  ]
+}
 
 def run_me(data):
+    data_dict = {}
+    metrics = aws_metric_data(data_dict,data)
     e2e_sender(metrics, "tsd", data['auth'], data)
+
+if __name__ == "__main__":
+    run_me(data)
