@@ -26,11 +26,7 @@ def export_prometheus_metrics(options):
 
     for family in text_string_to_metric_families(r.text):
         for sample in family.samples:
-            # print("Name: {0} Labels: {1} Value: {2}".format(*sample))
-            # print("Name: {0}".format(*sample))
-
             if sample[0] in data["metrics"]:
-                #print(sample[0])
                 if sample[0] == "node_thermal_zone_temp":
                     if sample[1]["type"] == "pm8994_tz":
                         temperature = sample[2]
@@ -53,6 +49,5 @@ def export_prometheus_metrics(options):
                     if sample[1]['mode'] != "idle":
                         cpu_list.append(sample[2])
                     edgecaster_data['CPU Usage'] = node_cpu_seconds_total
-
     edgecaster_data['memory_usage'] = round(int(edgecaster_data['node_memory_Active_bytes']) / int(edgecaster_data['node_memory_MemTotal_bytes']) * 100,3)
     return edgecaster_data

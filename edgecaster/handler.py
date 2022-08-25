@@ -1,9 +1,8 @@
-# from python_parser.code.handler import handler as prometheus_handler
 from python_parser.send_e2e import touchstream_sender
 from python_parser.prometheus_parser import export_prometheus_metrics
 from api.get_api_status import output_streams, send_e2e
+from helpers.aws_get_metric_data import run_me
 import json
-from pprint import pprint
 import time
 
 with open(
@@ -11,12 +10,14 @@ with open(
 ) as file:
     data = json.load(file)
 
-print(data)
-
 
 while True:
-    time.sleep(60)
+    time.sleep(60) # E2E API has a 1m rate limit
     prom_metrics = export_prometheus_metrics(data)
+    # Post prometheus data
     touchstream_sender(data,prom_metrics)
+    # Post Edgecaster data
     output_streams(data["mapping"], data["edgecaster_ip"], data)
+    # Post IVS data
+    run_me(data)
 

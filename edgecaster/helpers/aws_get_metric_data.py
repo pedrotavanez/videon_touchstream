@@ -15,15 +15,15 @@ metrics = [
 ]
 
 
-def aws_metric_data(data):
+def aws_metric_data(data, options):
     overall_data = []
     channel_name = "raD1O1Gj8bTp"
     now, ago_1m = time_in_query(60)
     client = new_aws_client(
-        "cloudwatch",
-        "S749HIS5RWN0AQV",
-        "us-east-1",
-        "arn:aws:iam::714125606834:role/touchstream-medialive-role-CrossAccountRole-DEB8UR3OTC5W",
+        options['aws_service'],
+        options['aws_access_id'],
+        options['region'],
+        options['arn'],
     )
     metric_data_id = 0
     # for and append
@@ -134,12 +134,13 @@ def e2e_sender(data, system, headers, options):
 
 data = {}
 metrics = aws_metric_data(data)
-headers = {
-    "X-TS-ID": "fef6c8f8-c79e-473d-8840-85aa62bc",
-    "Authorization": "Bearer 3c972d1f0b6548508edaccc82076b09c",
-    "Content-Type": "application/json",
-}
-options = {}
-options["channel"] = ["064ed77c", "064ed77c.Live.HLS.AWS_IVS"]
+# headers = {
+#     "X-TS-ID": "fef6c8f8-c79e-473d-8840-85aa62bc",
+#     "Authorization": "Bearer 3c972d1f0b6548508edaccc82076b09c",
+#     "Content-Type": "application/json",
+# }
+# options = {}
+# options["channel"] = ["064ed77c", "064ed77c.Live.HLS.AWS_IVS"]
 
-e2e_sender(metrics, "tsd", headers, options)
+def run_me(data):
+    e2e_sender(metrics, "tsd", data['auth'], data)
